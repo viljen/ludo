@@ -2,11 +2,27 @@ import numpy as np
 import random
 import time
 
+out = open("out.txt", "w")
+
 board = np.zeros((4,6,3))
 goal = np.zeros((4,4))
 start = np.array([[1,1,1,1],[2,2,2,2],[3,3,3,3],[4,4,4,4]])
 atStart = [0,0,0,0]
 die = 0
+
+def initialiseBoard():
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            for k in range(len(board[i][j])):
+                board[i][j][k] = 0
+    for i in range(len(goal)):
+        for j in range(len(goal[i])):
+            goal[i][j] = 0
+    for i in range(1,5):
+        for j in range(4):
+            start[i-1][j] = i
+    for i in range(4):
+        atStart[i] = 0
 
 def printboard():
     text = ""
@@ -100,9 +116,9 @@ def printboard():
     for i in range(3):
         text += str(int(board[3][0][2-i]))
     text += "      \n\n"
-    print(text)
-    print("Goal:")
-    print(goal)
+    #out.write(text)
+    #out.write("Goal:")
+    #out.write(str(goal))
 
 def rolldie():
     return random.randint(1,6)
@@ -114,12 +130,12 @@ def findplace(i):
             k = 3
         else:
             k -= 1
-    j = 5
-    while i not in board[k][j]:
-        j -= 1
     g = 2
-    while board[k][j][g] != i:
+    while i not in board[k,:,g]:
         g -= 1
+    j = 5
+    while board[k][j][g] != i:
+        j -= 1
     return k, j, g
 
 def newmove(k, j, g, die, i):
@@ -131,10 +147,18 @@ def newmove(k, j, g, die, i):
         if move < 0:
             index = die - j
             if index > 1:
-                index -= 1
-                new_j = 0
-                new_g = 1
-                newmove(k, new_j, new_g, index, i)
+                if k == i-1:
+                    index -= 1
+                    new_j = index
+                    new_g = 1
+                elif index > 2:
+                    index -= 2
+                    new_j = index
+                    new_g = 2
+                else:
+                    index -= 1
+                    new_j = 0
+                    new_g = 1
             else:
                 new_j = 0
                 new_g = index
@@ -146,7 +170,6 @@ def newmove(k, j, g, die, i):
                 new_j = j + die
             else:
                 t = 0
-                print(goal)
                 while goal[i-1][t] == i:
                     t += 1
                 goal[i-1][t] = int(i)
@@ -177,7 +200,13 @@ def newmove(k, j, g, die, i):
 
 def kick(k, j, g, i, die, old_k, old_j, old_g):
     kicked = int(board[k][j][g])
-    if kicked == i:
+    if kicked == k + 1 and j == 1 and g == 2:
+        index = 0
+        while start[i-1][index] != 0:
+            index += 1
+        start[i-1][index] = i
+        board[old_k, old_j, old_g] = 0
+    elif kicked == i:
         new_k, new_j, new_g = newmove(k,j,g,die,i)
         if board[new_k][new_j][new_g] != 0:
             kick(new_k, new_j, new_g, i, die, k, j, g)
@@ -204,6 +233,8 @@ def moveboard(i, die):
                 board[new_k][new_j][new_g] = i
         else:
             board[k][j][g] = 0
+
+    out.write(f"{atStart}\n")
     if atStart[i-1] != 0:
         if board[i-1][1][2] == 0:
             atStart[i-1] -= 1
@@ -211,41 +242,52 @@ def moveboard(i, die):
                 board[i-1][1][2] = i
 
 def makemove(i):
-    print(f"Rolling for {i}")
+    #out.write(f"Rolling for {i}\n")
     die = rolldie()
-    print(f"Rolled {die}")
+    #out.write(f"Rolled {die}\n")
     if die == 6:
         if i in start:
             j = 0
             while start[i-1][j] != i:
                 j += 1
             start[i-1][j] = 0
+            if board[i-1][1][2] != 0 and board[i-1][1][2] != i:
+                kicked = int(board[i-1][1][2])
+                index = 0
+                while start[kicked-1][index] != 0:
+                    index += 1
+                start[kicked-1][index] = kicked
             board[i-1][1][2] = i
             atStart[i-1] += 1
-            printboard()
+            #printboard()
         else:
             moveboard(i, die)
-            printboard()
-        input()
+            #printboard()
+        #input()
         makemove(i)
     else:
         moveboard(i, die)
-        printboard()
-
-won = False
-winner = 0
-while won == False:
-#for i in range(85):
-    i = 1
-    while i < 5:
-        makemove(i)
-        if 0 not in goal[i-1]:
-            won = True
-            winner = i
-            i = 5
         #printboard()
-        i += 1
-        input()
+winners = {1:0,2:0,3:0,4:0}
 
-print("End")
-print(f"{winner} won")
+def play():
+    won = False
+    initialiseBoard()
+    #printboard()
+    while won == False:
+    #for i in range(85):
+        i = 1
+        while i < 5:
+            makemove(i)
+            if 0 not in goal[i-1]:
+                won = True
+                winners[i] += 1
+                i = 5
+            #printboard()
+            i += 1
+           # input()
+
+for i in range(10000):
+    play()
+#print("End")
+print(f"{winners} won")
