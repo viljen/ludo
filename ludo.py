@@ -290,4 +290,4 @@ def play():
 for i in range(10000):
     play()
 #print("End")
-print(f"{winners} won")
+print(f"{winners}")
