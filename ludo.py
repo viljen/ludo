@@ -116,9 +116,9 @@ def printboard():
     for i in range(3):
         text += str(int(board[3][0][2-i]))
     text += "      \n\n"
-    #out.write(text)
-    #out.write("Goal:")
-    #out.write(str(goal))
+    print(text)
+    out.write("Goal:")
+    out.write(str(goal))
 
 def rolldie():
     return random.randint(1,6)
@@ -242,9 +242,9 @@ def moveboard(i, die):
                 board[i-1][1][2] = i
 
 def makemove(i):
-    #out.write(f"Rolling for {i}\n")
+    out.write(f"Rolling for {i}\n")
     die = rolldie()
-    #out.write(f"Rolled {die}\n")
+    out.write(f"Rolled {die}\n")
     if die == 6:
         if i in start:
             j = 0
@@ -259,21 +259,21 @@ def makemove(i):
                 start[kicked-1][index] = kicked
             board[i-1][1][2] = i
             atStart[i-1] += 1
-            #printboard()
+            printboard()
         else:
             moveboard(i, die)
-            #printboard()
-        #input()
+            printboard()
+        input()
         makemove(i)
     else:
         moveboard(i, die)
-        #printboard()
+        printboard()
 winners = {1:0,2:0,3:0,4:0}
 
 def play():
     won = False
     initialiseBoard()
-    #printboard()
+    printboard()
     while won == False:
     #for i in range(85):
         i = 1
@@ -283,11 +283,11 @@ def play():
                 won = True
                 winners[i] += 1
                 i = 5
-            #printboard()
+            printboard()
             i += 1
-           # input()
+            input()
 
-for i in range(10000):
+for i in range(1):
     play()
 #print("End")
 print(f"{winners}")
