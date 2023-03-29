@@ -10,6 +10,7 @@ class Player:
         self.pawns = []
         self.goal = goal
         self.entry = entry
+        self.goaled = 0
 
     def add_pawn(self, pawn):
         self.pawns.append(pawn)

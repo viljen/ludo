@@ -57,6 +57,7 @@ class Board:
                 active = []
                 for j in range(len(player.pawns)):
                     if player.pawns[j].isOn is not None:
+                        print(player.pawns[j].isOn)
                         active.append(player.pawns[j])
 
                 if len(active) > 0:
@@ -65,7 +66,7 @@ class Board:
     def move_out(self, player, die):
         moved_out = False
         for j in range(len(player.pawns)):
-            if player.pawns[j].isOn is None:
+            if player.pawns[j].isOn is None and player.pawns[j].goal == False:
                 player.pawns[j].move_out()
                 moved_out = True
                 print("Wohoo")
@@ -79,7 +80,7 @@ class Board:
     def move(self, pawns, die):
         print("Gibbigabb")
         for i in range(len(pawns)):
-            if pawns[i] is not None:
+            if pawns[i].isOn is not None:
                 pawns[i].move(die)
                 break
 
@@ -234,5 +235,8 @@ class Board:
 if __name__ == "__main__":
     b = Board()
 
-    for i in range(10):
+    for i in range(40):
         b.play()
+
+    for player in b.players:
+        print(player.goaled)
