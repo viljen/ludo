@@ -59,7 +59,6 @@ class Board:
                     if player.pawns[j].isOn is not None:
                         active.append(player.pawns[j])
 
-                #print(active)
                 if len(active) > 0:
                     self.move(active, num)
 
@@ -67,37 +66,169 @@ class Board:
         moved_out = False
         for j in range(len(player.pawns)):
             if player.pawns[j].isOn is None:
-                player.pawns[j].isOn = player.entry
+                player.pawns[j].move_out()
                 moved_out = True
                 print("Wohoo")
                 break
         if not moved_out:
             self.move(player.pawns, die)
 
+        self.print_board()
+        input()
+
     def move(self, pawns, die):
         print("Gibbigabb")
         for i in range(len(pawns)):
             if pawns[i] is not None:
-                current = pawns[i].isOn
-                for j in range(die):
-                    current = current.next
-                pawns[i].isOn = current
+                pawns[i].move(die)
                 break
 
+        self.print_board()
+        input()
+
     def print_board(self):
+        """
         text = ""
         for g in range(4):
+            text += "\n"
             for i in range(13):
                 text += "["
-                for j in range(len(self.players)):
-                    for k in range(len(self.players[j].pawns)):
-                        if self.players[j].pawns[k].isOn is not None:
-                            if self.players[j].pawns[k].isOn.id == i+g*13:
-                                text += f"{j}"
-                
+                if len(self.fields[i+g*13].pawns) > 0:
+                    for pawn in self.fields[i+g*13].pawns:
+                        text += str(pawn.belongsTo.id)   
+                else:
+                    text += " "       
                 text += "]"
-            text += "\n"
-        
+        print(text+"\n")
+        """
+        i = 49
+        j = 48
+        text = "                  "
+        for g in range(3):
+            text += "["
+            if len(self.fields[i].pawns) > 0:
+                    for pawn in self.fields[i].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            i += 1
+            text += "]"  
+
+        i = 0
+        text += "\n"
+        for g in range(5):
+            text += "                  ["
+            if len(self.fields[j].pawns) > 0:
+                    for pawn in self.fields[j].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            j -= 1
+            text += "]   " 
+            text += "["
+            if len(self.fields[i].pawns) > 0:
+                    for pawn in self.fields[i].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            i += 1
+            text += "]\n" 
+
+        j -= 5
+        for g in range(6):
+            text += "["
+            if len(self.fields[j].pawns) > 0:
+                    for pawn in self.fields[j].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            j += 1
+            text += "]"
+
+        text += "         "
+        for g in range(6):
+            text += "["
+            if len(self.fields[i].pawns) > 0:
+                    for pawn in self.fields[i].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            i += 1
+            text += "]"
+
+        j -= 7
+        text += "\n["
+        if len(self.fields[j].pawns) > 0:
+            for pawn in self.fields[j].pawns:
+                text += str(pawn.belongsTo.id)
+        else:
+                text += " "
+        text += "]                                       ["
+        if len(self.fields[i].pawns) > 0:
+            for pawn in self.fields[i].pawns:
+                text += str(pawn.belongsTo.id)
+        else:
+                text += " "
+        text += "]\n"
+
+        j -= 1
+        i += 1
+
+        for g in range(6):
+            text += "["
+            if len(self.fields[j].pawns) > 0:
+                    for pawn in self.fields[j].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            j -= 1
+            text += "]"
+
+        text += "         "
+        i += 5
+        for g in range(6):
+            text += "["
+            if len(self.fields[i].pawns) > 0:
+                    for pawn in self.fields[i].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            i -= 1
+            text += "]"
+
+        i += 7
+
+        text += "\n"
+        for g in range(5):
+            text += "                  ["
+            if len(self.fields[j].pawns) > 0:
+                    for pawn in self.fields[j].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            j -= 1
+            text += "]   " 
+            text += "["
+            if len(self.fields[i].pawns) > 0:
+                    for pawn in self.fields[i].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            i += 1
+            text += "]\n" 
+
+        i = j
+        text += "                  "
+        for g in range(3):
+            text += "["
+            if len(self.fields[i].pawns) > 0:
+                    for pawn in self.fields[i].pawns:
+                        text += str(pawn.belongsTo.id)
+            else:
+                text += " "
+            i -= 1
+            text += "]" 
+
         print(text)
 
 if __name__ == "__main__":
@@ -105,5 +236,3 @@ if __name__ == "__main__":
 
     for i in range(10):
         b.play()
-
-    b.print_board()
