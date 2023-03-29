@@ -4,7 +4,8 @@ from goal import Goal
 from strategy import Strategy 
 
 class Player:
-    def __init__(self, goal, entry):
+    def __init__(self, goal, entry, id):
+        self.id = id
         self.strategy = Strategy()
         self.pawns = []
         self.goal = goal
