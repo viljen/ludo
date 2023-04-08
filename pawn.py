@@ -48,3 +48,6 @@ class Pawn:
                 if pawn.belongsTo != self.belongsTo:
                     pawn.isOn = None
                     self.isOn.remove_pawn(pawn)
+
+    def __str__(self):
+        return f"Pawn ({self.belongsTo})"

@@ -14,3 +14,6 @@ class Player:
 
     def add_pawn(self, pawn):
         self.pawns.append(pawn)
+
+    def __str__(self):
+        return f"Player {self.id}"
