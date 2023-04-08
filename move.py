@@ -1,61 +1,54 @@
 class Move:
-    def __init__(self, start_field, end_field, active_pawn):
-        self.start_field = start_field
-        self.end_field = end_field
-        self.active_pawn = active_pawn
-        self.capture = False
-        
+    def __init__(self, startField, endField, activePawn):
+        self.startField = startField
+        self.endField = endField
+        self.activePawn = activePawn
+        self.player = activePawn.belongsTo
 
-    def execute():
+    def execute(self):
         # Perform the move on the board
-        self.start_field.remove_pawn(self.active_pawn)
-        if self.capture:
-            for pawn in end_field.pawns:
-                self.end_field.remove_pawn(pawn)
+        self.startField.remove_pawn(self.activePawn)
+        if self.capture():
+            for pawn in endField.pawns:
+                self.endField.remove_pawn(pawn)
                 pawn.isOn = None
-        self.end_field.add_pawn(self.active_pawn)
+        self.endField.add_pawn(self.activePawn)
 
     # The following methods describe the properties of the move
         
-    def capture():
+    def capture(self):
         # Is it a capture move?
-        for pawn in self.end_field.pawns:
-            if (pawn.belongsTo is not self.active_pawn.belongsTo):
+        for pawn in self.endField.pawns:
+            if (pawn.belongsTo is not self.player):
                 return True
         return False
 
-    def goalMove():
+    def goal_move(self):
         # Is it a move within the goal area?
-        return self.start_field.goal != None
+        return self.startField.goal != None
 
-    def intoGoal():
+    def into_goal(self):
         # Does the move make the pawn enter the goal area?
-        return (not self.goalMove()) and (self.end_field.goal != None)
+        return (not self.goalMove()) and (self.endField.goal != None)
 
-    def createStack():
+    def create_stack(self):
         # Does the move create a safe stack?
-        for pawn in self.end_field.pawns:
-            if (pawn.belongsTo is self.active_pawn.belongsTo):
-                return True
-        return False
+        pawnCount = self.endField.count_pawns(self.player) 
+        return pawnCount >= 1
     
-    def breakStack():
+    def break_stack(self):
         # Does the move break a safe stack?
-        pawnCount = 0
-        for pawn in self.start_field.pawns:
-            if (pawn.belongsTo is self.active_pawn.belongsTo):
-                pawnCount += 1
+        pawnCount = self.startField.count_pawns(self.player)
         return pawnCount == 2
 
-    def endSafe():
+    def end_safe(self):
         # Does the move end in safety?
         return self.createStack() or self.goalMove() or self.intoGoal()
 
-    def startSafe():
+    def start_safe(self):
         # Does the move start in safety?
-        inStack = False
+        pawnCount = self.startField.count_pawns(self.player)
+        return pawnCount >= 2 or self.goal_move() or self.startField == self.player.entry
 
-        
     def __str__(self):
-        capture_str = ", with capture" if self.Capture else ""
-        return f"Move from {start_field} to {end_field}{capture_str}."
+        return f"Move from {startField} to {endField}"

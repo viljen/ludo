@@ -13,6 +13,13 @@ class Field:
     def remove_pawn(self, pawn):
         self.pawns.remove(pawn)
 
+    def pawn_count(self, player):
+        pawnCount = 0
+        for pawn in self.pawns:
+            if pawn.belongsTo == player:
+                pawnCount += 1
+        return pawnCount
+
     def __str__(self):
         pawns_str = ", ".join([str(pawn) for pawn in self.pawns])
-        return f"Field {self.id}, containing pawns: {pawns_str}"
+        return f"Field {self.id}"
