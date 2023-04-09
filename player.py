@@ -1,3 +1,5 @@
+# TODO: Create start field self.pawnPool, not None
+# TODO: Create field for completed pawns, self.completed
 #from pawn import Pawn 
 from entry import Entry 
 from goal import Goal 

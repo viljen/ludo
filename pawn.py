@@ -49,5 +49,9 @@ class Pawn:
                     pawn.isOn = None
                     self.isOn.remove_pawn(pawn)
 
-    def __str__(self):
+    def active(self) -> bool:
+        # Is the pawn in active play?
+        return not (self.isOn == self.belongsTo.pawnPool or self.isOn == self.belongsTo.completed)
+
+    def __str__(self) -> str:
         return f"Pawn ({self.belongsTo})"
